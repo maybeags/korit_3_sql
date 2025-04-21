@@ -291,3 +291,256 @@ let bmi;
 당신의 BMI지수는 ??.???? 입니다.
 
 가 출력될 수 있도록 작성하시오.
+
+```js
+let height = 172.5;
+let weight = 68.7;
+let bmi;            // 아직 대입 안시킬거니까 선언만 했습니다.
+let answerBmi;
+// 일단 height가 cm이기 때문에 m로 바꿔줘야 함
+height /= 100; // JS에서 배운거
+bmi = weight / (height**2);
+answerBmi = '당신의 BMI지수는 ';
+
+console.log(answerBmi, bmi, '입니다.');
+```
+이상과 같은 방식 등으로 풀이가 가능합니다(다양한 방법의 풀이가 있을 수 있는데, 저는 오늘 배웠던 것을 최대한 사용하기 위해 저렇게 썼습니다)
+
+여기서 중요한 점은 console.log();에 다양한 자료형의 데이터를 한꺼번에 작성하기 위해서는 '+', 혹은 ','가 연결되어 있어야 해서 불편합니다
+  -> Java를 배운 저희는 그냥 그러려니 하고 작성했었지만 다른 Frontend 개발자들은 저 개념을 좀 싫어했습니다.
+    그래서 다양한 자료형을 한 번에 넣더라도 +와 , 로 연결하지 않는 방법을 고안했는데, 그것이 백틱(`)을 이용한 방법입니다.
+    
+형식
+```js
+console.log(`어쩌고저쩌고한 스트링데이터 : ${JS변수명}`);
+```
+으로 쓰게 될 경우 스트링 데이터와 JS 변수를 연결할 필요 없이 {} 내부 영역이 외부에 있는 변수를 참조한다는 것을 명시해줌으로써 가독성을 향상시켰습니다.
+비슷한 경우가 python 등에서도 나타나기 때문에 알아두시는 게 향후 정신건강에 좋습니다.
+저는 이 개념을 뒤늦게 알았다가 JS를 혐오하게 됐다가 최근에 빠져나왔습니다...
+
+## 객체와 배열
+
+### 객체(Object)
+- 이상에서 배운 number, string, boolean 등의 자료형을 기본 자료형(Primitive types)이라고 했습니다. 즉, 각 자료형이 단 하나의 데이터만 가지고 있는 형태에 해당함.
+- 이제 데이터 여러 개를 함께 묶어서 사용하는 복합 자료형도 사용하는데, 기본 자료형 외의 모든 데이터가 해당됨.
+- 그 중에서 객체(Object)는 '키:값'의 형태로 이루어져있고, 이를 프로퍼티(property)라고 함.
+
+형식
+```js
+const person1 = {
+  name: '김일',
+  age: 20,
+  married: false,
+};
+
+console.log(typeof person1, person1);
+```
+java와의 대조
+```java
+@AllArgsConstructor
+class Person {
+  String name;
+  int age;
+  boolean married
+}
+
+public class PersonMain {
+  public static main(args[]) {
+    Person person1 = new Person("김일", 20, false);
+  }
+}
+```
+- 객체 접근 방법
+형식
+  1. 객체명.키이름
+  2. 객체명['키이름']
+```js
+// # 1 방법
+person1.name
+// # 2 방법
+person1['name']
+```
+- 근데 지금 보니까 # 2는 좀 귀찮아보입니다. 왜 쓸까요?
+  - 여러 명이서 협업을 하게 되는 경우가 많을텐데, 코드를 작성할 때 어떤 키 값이 들어오게 될지 모를 때가 많습니다. 예를 들어서 프로그램 실행을 하고 나서 input을 통해서 key 값을 집어넣게 된다고 하면 # 1과 같은 방법으로는 코딩이 불가능합니다.
+
+Java 기준으로 생각해보겠습니다.
+```java
+@AllArgsConstructor
+class Person {
+  String name;
+  int age;
+  boolean married
+}
+
+public class PersonMain {
+  public static main(args[]) {
+    Person person1 = new Person("김일", 20, false);
+
+    Scanner scanner = new Scanner(System.in);
+    System.out.print("검색하고자 하는 조건을 입력하세요 >>> ")
+    String key1 = scanner.nextLine();     // 그리고 실행시에 여러분이 married라고 쳤다고 가정
+
+    System.out.println("김철수의 결혼 여부는 " + person1.key1 + " 입니다." );
+  }
+}
+```
+java적으로 풀기는 했지만 이상의 코드가 오류가 발생한다는 점입니다
+person1.key1 =/= person1.married이기 때문입니다.
+
+그런 이유로 JS에서는 # 1, # 2 두 가지 방식의 value 접근법이 존재합니다.
+여러분은 두 가지 방법을 전부 다 알고 있어야 합니다.
+
+```js
+const person1 = {
+  name: '김일',
+  age: 20,
+  married: false,
+};
+
+const person1Age = person1.age;   // 객체 property의 value값을 하나의 변수에 대입하는 것 가능
+const person1Married = person1['married']; // # 2를 이용한 방법도 가능
+
+console.log(person1Age, person1Married);
+```
+- 프로퍼티를 추가
+이 것도 2 가지 방법이 있습니다.
+```js
+const person1 = {
+  name: '김일',               // 그 css 할 때는 ; 썼는데 얘는 나열할 때 , 씁니다.
+  age: 20,
+  married: false,
+};
+
+person1.job = '프로그래머';     // # 1 방법
+person1['bloodtype'] = 'B';     // # 2 방법
+
+console.log(person1['job'], person1.bloodtype);
+```
+
+- 기존 프로퍼티 수정하기
+```js
+const person1 = {
+  name: '김일',               
+  age: 20,
+  married: false,
+};
+person1.age++;
+console.log(person1);
+```
+- const로 person1을 지정했는데, 왜 수정이 될까요?
+  - person1 자체는 const에 해당하지만, person1.age / person1['age']는 const가 아닙니다. 그렇기 때문에 내부 property는 수정이 가능합니다.
+
+  - 이걸 굳이 비유를 하자면
+    - person1은 객체이면서, 하나의 집으로 규정한 것입니다. 따라서 집 자체를 바꾸는 것은 불가능하지만, 집의 내부에 있는 가구(값들)들은 집이 바뀌지 않는 한 수정이 가능합니다.
+
+집 자체를 바꾸는(객체의 property를 다 갈아버리는) 예시
+```js
+const person1 = {
+  name: '김일',               
+  age: 20,
+  married: false, // 이까지 썼을 때 맨 뒤에 ',' 찍어두는게 개발자들 사이의 매너랍니다.
+}
+
+person1.job = '프로그래머';
+person1['bloodtype'] = 'B';
+
+person1 = {};           // 이 시점에서 오류 발생 -> 멀쩡하게 있는 property를 다 날렸기 때문에 const를 수정한 것으로 간주함.
+console.log(person1);
+```
+
+### 배열(Array)
+- 배열도 여러 개의 데이터를 저장하기는 하는데, property의 형태가 아니라 element로만 저장하는 형태.
+- Java와는 달리 서로 다른 자료형들끼리도 하나의 묶음에 들어갈 수 있습니다. 
+- JS상에서는 배열 역시 근본적으로는 '객체의 한 종류'
+
+```js
+const person1 = {
+  name: '김일',               
+  age: 20,
+  married: false, // 이까지 썼을 때 맨 뒤에 ',' 찍어두는게 개발자들 사이의 매너랍니다.
+}
+
+person1.job = '프로그래머';
+person1['bloodtype'] = 'B';
+const myArray1 = [true, 3.14, 'Hello', person1];
+console.log(myArray1, myArray1.length);
+```
+
+- 배열의 요소에 접근하기
+```js
+const person1 = {
+  name: '김일',               
+  age: 20,
+  married: false, // 이까지 썼을 때 맨 뒤에 ',' 찍어두는게 개발자들 사이의 매너랍니다.
+}
+
+person1.job = '프로그래머';
+person1['bloodtype'] = 'B';
+const myArray1 = [true, 3.14, 'Hello', person1];
+console.log(
+  myArray1[0],
+  myArray1[1],
+  myArray1[2],
+  myArray1[3],
+);
+```
+- myArray1.0 으로는 불가능할까요?
+  - 변수명은 숫자로 시작할 수 없기 때문에 불가능하다. -> Java를 배운 우리는 그냥 속편하게 [indexNumber]로 찾아갑시다.
+
+- 배열의 element에 접근한 후에 그 값을 바꾸는 방법
+```js
+myArray1[0] = false;        // 이게 바꾼거죠.
+```
+
+- element 추가 및 삭제
+```js
+const array2 = ['안', '녕', '하', 3, false, 'not good today'];
+
+// 요소 추가를 할 때는 Java와 다릅니다 -> Java는 배열 크기가 고정돼있어서 추가 불가능했죠
+// 근데 list에서는 가능했었습니다, 그 부분을 떠올리셔야 합니다.
+
+array2.push(true);
+array2[3] *= 100;
+array2[5] += '🤔';
+
+// 삭제 부분 설명하겠습니다
+const popped1 = array2.pop();
+console.log(array2, popped1);
+```
+
+- 이상의 코드를 실행시켰을 때의 결과값을 보게 되면
+['안', '녕', '하', 300, false, 'not good today🤔'] true
+라고 되어있습니다.
+- 배열명.pop(); 은 배열의 '맨 마지막 element를 반환'하고, '배열 상에서는 삭제' 합니다.
+
+- 객체와 배열의 중첩 사용
+
+```js
+const person2 = {
+  name: '김이',
+  age: 22,
+  languages: ['Korean', 'English', 'Japanese'],
+  education: {
+    school: '한국대',
+    majors: ['컴퓨터공학', '영어교육'],
+    graduated: true,
+  },
+};
+console.log(person2);
+
+// Japanese를 출력하겠습니다
+console.log(person2.languages[2]);
+// 컴퓨터공학 을 출력하겠습니다
+console.log(person2.education.majors[0]);
+```
+
+# 회고
+
+1. 기술 블로그 -> .md
+2. 프로그래머스 / 백준 -> 마찬가지로 얘도 기술블로그에 들어갈 소재가 됩니다.
+3. 그렇다면 저희는 이제 기술 블로그에 올리는 것까지(단순히 .md를 정리하는 것이 아니라)
+4. 기술블로그에 마지막 종강일 전까지 몇 개 정도 올릴까
+5. 정보처리기사 실기 -> 너무 어려웠다고 합니다 / 2회차가 쉬워집니다
+6. .md 파일 정리하세요 -> 블로그에 올릴 수 있도록 가공하세요 -> 프로그래머스
+7. 네이버블로그 / 티스토리 / velog
+
